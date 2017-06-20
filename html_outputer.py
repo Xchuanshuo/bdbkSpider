@@ -8,18 +8,24 @@ class HtmlOutputer(object):
         print(new_data['summary'])
         self.datas.append(new_data)
 
-    def output_html(self):
-        fout = open('output.html','w',encoding='gb18030',errors='ignore')
-        fout.write('<html>')
-        fout.write('<body>')
-        fout.write('<table>')
+    def into_mysql(self):
+        i = 0
         for data in self.datas:
-            fout.write('<tr>')
-            fout.write('<td>%s</td>'%data['url'])
-            fout.write('<td>%s</td>'%data['title'])
-            fout.write('<td>%s</td>'%data['summary'])
-            fout.write('</tr>')
-        fout.write('</table>')
-        fout.write('</body>')
-        fout.write('</html>')
-        fout.close()
+            conn = pymysql.Connect(
+                host='127.0.0.1',
+                user='root',
+                password='2414605975',
+                db='wikiurl',
+                port=3306,
+                charset='utf8mb4'
+            )
+            try:
+                cursor = conn.cursor()
+                i += 1
+                sql = 'insert into `urls`(`id`,`urlname`,`urlhref`,`urlcontent`)values(%s,%s,%s,%s)'
+                cursor.execute(sql, (i, data['title'],data['url'],data['summary']))
+                conn.commit()
+            finally:
+
+                conn.close()
+
