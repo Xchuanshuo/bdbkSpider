@@ -28,7 +28,7 @@ class SpiderMain(object):
             except:
                 print('craw failed')
 
-        self.outputer.output_html()
+        self.outputer.into_mysql()
 if __name__ == '__main__':
     rooturl = 'http://baike.baidu.com/item/Python'
     obj_spider = SpiderMain()
